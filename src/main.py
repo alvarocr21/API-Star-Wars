@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User
+
 #from models import Person
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 
+
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -30,8 +32,9 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+#Inicio Endpoints para user
 @app.route('/user', methods=['GET'])
-def get_user():
+def get_users():
 
     # get all the user
     result = User.query.all()
@@ -41,7 +44,15 @@ def get_user():
 
     return jsonify(all_user), 200
 
+@app.route('/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+  
+    fe = User.query.get(int(user_id))
+    fe_dict = fe.__dict__
+    del fe_dict['_sa_instance_state']
+    return jsonify(fe_dict)
 
+  
 @app.route('/user', methods=['POST'])
 def add_user():
     request_body = request.get_json()
@@ -83,8 +94,38 @@ def del_user(user_id):
     db.session.commit()
    
     return jsonify({"Respuesta":"Los datos se eliminaron satisfactoriamente"}), 200
-   
+#Final Endpoints para user  
   
+#Inicio Endpoints  para characters
+
+#@app.route('/characters', methods=['GET'])
+#@app.route('/characters/<int:character_id>', methods=['GET'])
+#@app.route('/characters', methods=['POST'])
+#@app.route('/characters/<int:character_id>', methods=['PUT'])
+#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+
+#Final Endpoints  para characters
+
+#Inicio Endpoints  para Planets
+
+#@app.route('/characters', methods=['GET'])
+#@app.route('/characters/<int:character_id>', methods=['GET'])
+#@app.route('/characters', methods=['POST'])
+#@app.route('/characters/<int:character_id>', methods=['PUT'])
+#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+
+#Final Endpoints  para Planets
+
+#Inicio Endpoints  para Favoritos
+
+#@app.route('/characters', methods=['GET'])
+#@app.route('/characters/<int:character_id>', methods=['GET'])
+#@app.route('/characters', methods=['POST'])
+#@app.route('/characters/<int:character_id>', methods=['PUT'])
+#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+
+#Final Endpoints  para Favoritos
+
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
