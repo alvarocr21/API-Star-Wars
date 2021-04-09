@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User,Characters,Planets,Favoritos
 
 #from models import Person
 
@@ -50,7 +50,8 @@ def get_user(user_id):
     fe = User.query.get(int(user_id))
     fe_dict = fe.__dict__
     del fe_dict['_sa_instance_state']
-    return jsonify(fe_dict)
+    fe_dict["password"]=""
+    return jsonify({"user":fe_dict}),200
 
   
 @app.route('/user', methods=['POST'])
@@ -98,31 +99,166 @@ def del_user(user_id):
   
 #Inicio Endpoints  para characters
 
-#@app.route('/characters', methods=['GET'])
-#@app.route('/characters/<int:character_id>', methods=['GET'])
-#@app.route('/characters', methods=['POST'])
-#@app.route('/characters/<int:character_id>', methods=['PUT'])
-#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+@app.route('/character', methods=['GET'])
+def get_characters():
 
+    # get all the user
+    result = Characters.query.all()
+
+    # map the results and your list of people  inside of the all_user variable
+    all_characters= list(map(lambda x: x.serialize(), result))
+
+    return jsonify(all_characters), 200
+
+@app.route('/character/<int:character_id>', methods=['GET'])
+def get_character(character_id):
+  
+    fe = Characters.query.get(int(character_id))
+    fe_dict = fe.__dict__
+    del fe_dict['_sa_instance_state']
+    return jsonify({"character":fe_dict}),200
+
+@app.route('/character', methods=['POST'])
+def add_character():
+    request_body = request.get_json()
+    character = Characters(birth_year=request_body["birth_year"],eye_color=request_body["eye_color"],gender=request_body["gender"],hair_color=request_body["hair_color"],height=request_body["height"],mass=request_body["mass"],name=request_body["name"],photoUrl=request_body["photoUrl"],skin_color=request_body["skin_color"])
+    db.session.add(character)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se almacenaron satisfactoriamente"}), 200
+
+@app.route('/character/<int:character_id>', methods=['PUT'])
+def update_character(character_id):
+    
+    character = Characters.query.get(character_id)
+    if character is None:
+        raise APIException('User not found', status_code=404)
+
+    request_body = request.get_json()
+    if "birth_year" in request_body:
+        character.birth_year = request_body["birth_year"]
+    if "eye_color" in request_body:
+        character.eye_color = request_body["eye_color"]
+    if "gender" in request_body:
+        character.gender = request_body["gender"]
+    if "hair_color" in request_body:
+        character.hair_color = request_body["hair_color"]
+    if "height" in request_body:
+        character.height = request_body["height"]
+    if "mass" in request_body:
+        character.mass = request_body["mass"]
+    if "name" in request_body:
+        character.name = request_body["name"]
+    if "photoUrl" in request_body:
+        character.photoUrl = request_body["photoUrl"]
+    if "skin_color" in request_body:
+        character.skin_color = request_body["skin_color"]
+
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se modificaron satisfactoriamente"}), 200
+
+@app.route('/character/<int:character_id>', methods=['DELETE'])
+def del_character(character_id):
+    
+    character = Characters.query.get(character_id)
+    if character is None:
+        raise APIException('User not found', status_code=404)
+
+    db.session.delete(character)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se eliminaron satisfactoriamente"}), 200
 #Final Endpoints  para characters
 
 #Inicio Endpoints  para Planets
 
-#@app.route('/characters', methods=['GET'])
-#@app.route('/characters/<int:character_id>', methods=['GET'])
-#@app.route('/characters', methods=['POST'])
-#@app.route('/characters/<int:character_id>', methods=['PUT'])
-#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+@app.route('/planet', methods=['GET'])
+def get_planets():
 
+    # get all the user
+    result = Planets.query.all()
+
+    # map the results and your list of people  inside of the all_user variable
+    all_planets= list(map(lambda x: x.serialize(), result))
+
+    return jsonify(all_planets), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+  
+    fe = Planets.query.get(int(planet_id))
+    fe_dict = fe.__dict__
+    del fe_dict['_sa_instance_state']
+    return jsonify({"character":fe_dict}),200
+
+@app.route('/planet', methods=['POST'])
+def add_planet():
+    request_body = request.get_json()
+    planet = Planets(climate=request_body["climate"],eye_color=request_body["eye_color"],gravity=request_body["gravity"],name=request_body["name"],orbital_period=request_body["orbital_period"],photoUrl=request_body["photoUrl"],population=request_body["population"],surface_water=request_body["surface_water"],terrain=request_body["terrain"])
+    db.session.add(planet)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se almacenaron satisfactoriamente"}), 200
+
+@app.route('/planet/<int:planet_id>', methods=['PUT'])
+def update_planet(planet_id):
+    
+    planet = Planets.query.get(planet_id)
+    if planet is None:
+        raise APIException('User not found', status_code=404)
+
+    request_body = request.get_json()
+    if "climate" in request_body:
+        planet.climate = request_body["climate"]
+    if "eye_color" in request_body:
+        planet.eye_color = request_body["eye_color"]
+    if "gravity" in request_body:
+        planet.gravity = request_body["gravity"]
+    if "name" in request_body:
+        planet.name = request_body["name"]
+    if "orbital_period" in request_body:
+        planet.orbital_period = request_body["orbital_period"]
+    if "photoUrl" in request_body:
+        planet.photoUrl = request_body["photoUrl"]
+    if "population" in request_body:
+        planet.population = request_body["population"]
+    if "surface_water" in request_body:
+        planet.surface_water = request_body["surface_water"]
+    if "terrain" in request_body:
+        planet.terrain = request_body["terrain"]
+
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se modificaron satisfactoriamente"}), 200
+
+@app.route('/planet/<int:planet_id>', methods=['DELETE'])
+def del_planet(planet_id):
+    
+    planet = Planets.query.get(planet_id)
+    if planet is None:
+        raise APIException('User not found', status_code=404)
+
+    db.session.delete(planet)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se eliminaron satisfactoriamente"}), 200
 #Final Endpoints  para Planets
 
 #Inicio Endpoints  para Favoritos
 
-#@app.route('/characters', methods=['GET'])
-#@app.route('/characters/<int:character_id>', methods=['GET'])
-#@app.route('/characters', methods=['POST'])
-#@app.route('/characters/<int:character_id>', methods=['PUT'])
-#@app.route('/characters/<int:character_id>', methods=['DELETE'])
+#@app.route('/favorito', methods=['GET'])
+#@app.route('/favorito/<int:character_id>', methods=['GET'])
+@app.route('/favorito', methods=['POST'])
+def add_favorito():
+    request_body = request.get_json()
+    favorito = Favoritos(user_id=request_body["user_id"],planets_id=request_body["planets_id"],characters_id=request_body["characters_id"])
+    db.session.add(favorito)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se almacenaron satisfactoriamente"}), 200
+#@app.route('/favorito/<int:character_id>', methods=['PUT'])
+#@app.route('/favorito/<int:character_id>', methods=['DELETE'])
 
 #Final Endpoints  para Favoritos
 
