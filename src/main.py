@@ -188,7 +188,7 @@ def get_planets():
 @app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
 
-     planet = Planets.query.get(character_id)
+    planet = Planets.query.get(character_id)
     if planet is None:
         raise APIException('This character is not in the database', status_code=404)
     result = planet.serialize()
