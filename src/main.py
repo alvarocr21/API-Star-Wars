@@ -46,12 +46,11 @@ def get_users():
 
 @app.route('/user/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-  
-    fe = User.query.get(int(user_id))
-    fe_dict = fe.__dict__
-    del fe_dict['_sa_instance_state']
-    fe_dict["password"]=""
-    return jsonify({"user":fe_dict}),200
+    user = User.query.get(user_id)
+    if user is None:
+        raise APIException('This user is not in the database', status_code=404)
+    result = user.serialize()
+    return jsonify(result), 200
 
   
 @app.route('/user', methods=['POST'])
@@ -113,10 +112,12 @@ def get_characters():
 @app.route('/character/<int:character_id>', methods=['GET'])
 def get_character(character_id):
   
-    fe = Characters.query.get(int(character_id))
-    fe_dict = fe.__dict__
-    del fe_dict['_sa_instance_state']
-    return jsonify({"character":fe_dict}),200
+    character = Characters.query.get(character_id)
+    if character is None:
+        raise APIException('This character is not in the database', status_code=404)
+    result = character.serialize()
+    return jsonify(result), 200
+
 
 @app.route('/character', methods=['POST'])
 def add_character():
@@ -186,12 +187,13 @@ def get_planets():
 
 @app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
-  
-    fe = Planets.query.get(int(planet_id))
-    fe_dict = fe.__dict__
-    del fe_dict['_sa_instance_state']
-    return jsonify({"character":fe_dict}),200
 
+     planet = Planets.query.get(character_id)
+    if planet is None:
+        raise APIException('This character is not in the database', status_code=404)
+    result = planet.serialize()
+    return jsonify(result), 200
+ 
 @app.route('/planet', methods=['POST'])
 def add_planet():
     request_body = request.get_json()

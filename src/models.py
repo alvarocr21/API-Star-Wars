@@ -68,7 +68,7 @@ class Planets(db.Model):
     surface_water = db.Column(db.String(50))
     orbital_period = db.Column(db.String(50))
     photoUrl = db.Column(db.String(500), nullable=False)
-    favoritos = db.relationship('Favoritos', lazy=True)
+    favoritos = db.relationship('Favoritos')
     def __repr__(self):
         return '<Planets %r>' % self.name
 
@@ -104,7 +104,7 @@ class Favoritos(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "user_id" : self.id_user,
+            "user_id" : self.user_id,
             "planets_id" : self.planets_id,
             "characters_id" : self.characters_id,
             # do not serialize the password, its a security breach
