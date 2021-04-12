@@ -259,9 +259,20 @@ def add_favorito():
     db.session.commit()
    
     return jsonify({"Respuesta":"Los datos se almacenaron satisfactoriamente"}), 200
-#@app.route('/favorito/<int:character_id>', methods=['PUT'])
-#@app.route('/favorito/<int:character_id>', methods=['DELETE'])
 
+#@app.route('/favorito/<int:favorito_id>', methods=['PUT'])
+
+@app.route('/favorito/<int:favorito_id>', methods=['DELETE'])
+def del_favorito(favorito_id):
+    
+    favorito = Favoritos.query.get(favorito_id)
+    if favorito is None:
+        raise APIException('User not found', status_code=404)
+
+    db.session.delete(favorito)
+    db.session.commit()
+   
+    return jsonify({"Respuesta":"Los datos se eliminaron satisfactoriamente"}), 200
 #Final Endpoints  para Favoritos
 
 # this only runs if `$ python src/main.py` is executed
