@@ -64,7 +64,7 @@ class Planets(db.Model):
     terrain = db.Column(db.String(50))
     climate = db.Column(db.String(50))
     gravity = db.Column(db.String(50))
-    eye_color = db.Column(db.String(50))
+    galaxy = db.Column(db.String(50))
     surface_water = db.Column(db.String(50))
     orbital_period = db.Column(db.String(50))
     photoUrl = db.Column(db.String(500), nullable=False)
@@ -80,7 +80,7 @@ class Planets(db.Model):
             "terrain" : self.terrain,
             "climate" : self.climate,
             "gravity" : self.gravity,
-            "eye_color" : self.eye_color,
+            "galaxy" : self.galaxy,
             "surface_water" : self.surface_water,
             "orbital_period" : self.orbital_period,
             "photoUrl" : self.photoUrl,
