@@ -197,7 +197,7 @@ def get_planet(planet_id):
 @app.route('/planet', methods=['POST'])
 def add_planet():
     request_body = request.get_json()
-    planet = Planets(climate=request_body["climate"],eye_color=request_body["eye_color"],gravity=request_body["gravity"],name=request_body["name"],orbital_period=request_body["orbital_period"],photoUrl=request_body["photoUrl"],population=request_body["population"],surface_water=request_body["surface_water"],terrain=request_body["terrain"])
+    planet = Planets(climate=request_body["climate"],galaxy=request_body["galaxy"],gravity=request_body["gravity"],name=request_body["name"],orbital_period=request_body["orbital_period"],photoUrl=request_body["photoUrl"],population=request_body["population"],surface_water=request_body["surface_water"],terrain=request_body["terrain"])
     db.session.add(planet)
     db.session.commit()
    
@@ -213,8 +213,8 @@ def update_planet(planet_id):
     request_body = request.get_json()
     if "climate" in request_body:
         planet.climate = request_body["climate"]
-    if "eye_color" in request_body:
-        planet.eye_color = request_body["eye_color"]
+    if "galaxy" in request_body:
+        planet.galaxy = request_body["galaxy"]
     if "gravity" in request_body:
         planet.gravity = request_body["gravity"]
     if "name" in request_body:
